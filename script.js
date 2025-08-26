@@ -415,7 +415,7 @@ if (tip) {
 
 /* ===== Click sulla pillola: vai alla pagina successiva (modifica URL se serve) ===== */
 img.addEventListener('click', () => {
-  window.location.href = '/imageconflict/secondpage.html';
+  window.location.href = '/imageconflict/ci-index.html';
 });
 
 

@@ -1,0 +1,63 @@
+:root{
+  --bg:#fff;
+  --fg:#000;
+  --fg-sub:#9c9c9c;
+  --fade-ms:900ms;
+}
+
+html,body{height:100%}
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--fg);
+  font-family:"Public Sans", sans-serif; /* font di default */
+  display:grid;
+  place-items:center;
+}
+
+#titles{ text-align:center; opacity:0; transition:opacity var(--fade-ms) ease; }
+#titles.show{opacity:1}
+#titles.fadeout{opacity:0; transition-duration:1000ms}
+#titles.clickable{cursor:pointer}
+
+#title-big{
+  margin:0;
+  letter-spacing:.01em;
+  font-size:clamp(44px, 9vw, 110px);
+  color:var(--fg);
+}
+
+/* Forza i font sugli span con alta specificità e !important */
+h1#title-big span.lgm{
+  font-family: "Public Sans", sans-serif !important;
+  font-weight: 700 !important;
+}
+h1#title-big span.thirty{
+  font-family: "Roboto", sans-serif !important;
+  font-weight: 900 !important;
+}
+
+/* Se hai qualche reset tipo body * { font-family:... } aggiungi questo: */
+#title-big span{ font-variant-ligatures: none; } /* opzionale, solo estetica */
+
+#title-small{
+  margin: 3em 0 0;
+  font-weight:700;
+  letter-spacing:0em;
+  text-transform:uppercase;
+  font-size:clamp(6px, 1.3vw, 13px);
+  color:var(--fg-sub);
+}
+
+.notice{
+  position:fixed;
+  left:50%;
+  bottom:18px;
+  transform:translateX(-50%);
+  background:#000;color:#fff;
+  padding:10px 14px;border-radius:999px;
+  font-size:14px;box-shadow:0 8px 24px rgba(0,0,0,.25);
+}
+.notice.hidden{display:none}
+
+.hidden{visibility:hidden}

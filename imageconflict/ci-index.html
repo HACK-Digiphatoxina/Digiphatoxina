@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>LGM-30A — Image Conflict</title>
+  <link rel="preload" href="LGM-30A.mp3" as="audio">
+  <link rel="stylesheet" href="ci-styles.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&family=Public+Sans:ital,wght@0,100..900;1,100..900&display=swap"
+    rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Oswald:wght@400;700&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="ci-styles.css">
+</head>
+
+<body>
+  <audio id="intro-audio" src="LGM-30A.mp3"></audio>
+
+  <!-- Titoli (clickabili se l'autoplay è bloccato) -->
+  <div id="titles" class="hidden" role="button" aria-label="Avvia riproduzione">
+    <h1 id="title-big">
+      <span class="lgm">LGM</span>-<span class="thirty">30A</span>
+    </h1>
+    <h2 id="title-small">ISMAELE SORAPERRA</h2>
+  </div>
+
+  <!-- Avviso se i popup vengono bloccati -->
+  <div id="popupNotice" class="notice hidden">
+    Pop‑up bloccati: clicca sulla scritta per aprire le 11 GIF.
+  </div>
+
+  <script src="ci-script.js"></script>
+</body>
+
+</html>
