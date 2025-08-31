@@ -1,0 +1,107 @@
+/* ===== Fase 2 (Hello Kitty) ===== */
+
+/* Evita selezione + cursore pointer sugli elementi interattivi */
+.h-noselect, .h-noselect *{
+  -webkit-user-select:none; -moz-user-select:none; -ms-user-select:none; user-select:none;
+  cursor: pointer;
+}
+
+/* Personaggio: margine destro */
+.h-char{
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  width: 240px;         /* regola se vuoi */
+  z-index: 9999;
+  opacity: 0;
+  transition: opacity 300ms ease;
+  pointer-events: auto;
+}
+.h-char.show{ opacity: 1; }
+.h-char video, .h-char img{ display:block; width:100%; height:auto; }
+
+/* Nuvoletta a dimensione fissa con becco integrato (bordo 2px) */
+.h-bubble{
+  position: absolute;
+  right: calc(100% + 14px);   /* a sinistra del personaggio */
+  bottom: 58%;
+  width: 360px;               /* << dimensione fissa */
+  height: 160px;              /* << dimensione fissa */
+  background: #fff;
+  color: #000;
+  border: 2px solid #000;     /* stroke più sottile */
+  border-radius: 14px;
+  padding: 12px 14px 10px;
+  font: 600 14px/1.25 "Public Sans", sans-serif;
+  box-shadow: 0 4px 0 #000;
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity .22s ease, transform .22s ease;
+  pointer-events: auto;       /* per cliccare il pulsante */
+  overflow: hidden;           /* il testo sta dentro */
+}
+.h-bubble.show{ opacity: 1; transform: translateY(0); }
+.h-bubble.hide{ opacity: 0; transform: translateY(6px); pointer-events:none; }
+
+/* Becco integrato: bordo + riempimento (attaccato al rettangolo) */
+.h-bubble::before,
+.h-bubble::after{
+  content:"";
+  position:absolute;
+  right:-10px;                 /* attacca al bordo destro */
+  bottom: 28px;
+  width: 0; height: 0;
+  border-top: 10px solid transparent;
+  border-bottom: 10px solid transparent;
+}
+.h-bubble::before{             /* bordo esterno */
+  border-left: 12px solid #000;
+  right: -12px;                /* leggermente più esterno per creare il bordo */
+}
+.h-bubble::after{              /* riempimento interno */
+  border-left: 12px solid #fff;
+}
+
+/* Testo della nuvoletta + caret typewriter */
+.h-bubble-text{
+  display:block;
+  white-space:pre-wrap;
+  letter-spacing:.2px;
+  max-height: 102px;           /* testo dentro (160 - padding - bottone) */
+  overflow:hidden;
+}
+.h-type-caret{
+  display:inline-block;
+  width: 8px; height: 16px;
+  margin-left: 2px;
+  background:#000;
+  animation: blink .9s steps(1) infinite;
+  vertical-align: text-bottom;
+}
+@keyframes blink { 50% { opacity: 0; } }
+
+/* Pulsante “pulsantino” dentro la nuvoletta */
+.h-btn{
+  display:inline-block;
+  margin-top:10px;
+  padding:6px 10px;
+  border:2px solid #000;
+  border-radius:8px;
+  background:#fff;
+  font-weight:700;
+  line-height:1;
+  box-shadow: 0 3px 0 #000;
+}
+.h-btn:active{ transform: translateY(1px); box-shadow: 0 2px 0 #000; }
+
+/* Wallpaper che compare dopo il click */
+.h-wallpaper{
+  position: fixed;
+  inset: 0;
+  background: #fff center/cover no-repeat;
+  z-index: 1;
+  opacity: 0;
+  transition: opacity 400ms ease;
+  pointer-events:none;
+}
+.h-wallpaper.show{ opacity: 1; }

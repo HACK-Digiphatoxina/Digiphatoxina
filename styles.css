@@ -1,9 +1,11 @@
 /* ===== Base ===== */
-html, body {
+html,
+body {
   margin: 0;
   padding: 0;
   height: 100%;
-  background: #f3f3f3; /* colore iniziale richiesto */
+  background: #f3f3f3;
+  /* colore iniziale richiesto */
   color: #f3f3f3;
   font-family: "Roboto", sans-serif;
   overflow: hidden;
@@ -15,12 +17,15 @@ html, body {
 #replacement-video,
 #vignette {
   position: absolute;
-  inset: 0;         /* top/right/bottom/left:0 */
+  inset: 0;
+  /* top/right/bottom/left:0 */
   width: 100vw;
   height: 100vh;
 }
 
-#viewer-container { z-index: 0; }
+#viewer-container {
+  z-index: 0;
+}
 
 /* ===== model-viewer ===== */
 model-viewer {
@@ -36,9 +41,17 @@ model-viewer {
 }
 
 /* Nascondi UI/loader/hint di model-viewer */
-model-viewer::part(default-progress-bar) { display: none; }
-model-viewer::part(default-ar-button)     { display: none; }
-model-viewer::part(announcement)          { display: none; }
+model-viewer::part(default-progress-bar) {
+  display: none;
+}
+
+model-viewer::part(default-ar-button) {
+  display: none;
+}
+
+model-viewer::part(announcement) {
+  display: none;
+}
 
 /* ===== Canvas rumore (sopra al modello e sotto al video) ===== */
 #noise-canvas {
@@ -51,9 +64,12 @@ model-viewer::part(announcement)          { display: none; }
 /* ===== Video full-screen ===== */
 #replacement-video {
   z-index: 2;
-  display: none;           /* mostrato da JS */
-  pointer-events: none;    /* non intercetta input */
-  object-fit: cover;       /* copre tutto */
+  display: none;
+  /* mostrato da JS */
+  pointer-events: none;
+  /* non intercetta input */
+  object-fit: cover;
+  /* copre tutto */
   background: #000;
   opacity: 0;
   transition: opacity .3s ease;
@@ -63,7 +79,7 @@ model-viewer::part(announcement)          { display: none; }
 #vignette {
   z-index: 3;
   pointer-events: none;
-  background: radial-gradient(ellipse at center, transparent 60%, rgba(0,0,0,.5) 100%);
+  background: radial-gradient(ellipse at center, transparent 60%, rgba(0, 0, 0, .5) 100%);
   opacity: 0;
   transition: opacity .3s ease;
 }
@@ -73,8 +89,10 @@ model-viewer::part(announcement)          { display: none; }
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%); /* centrata */
-  display: none;                     /* nascosta all’avvio */
+  transform: translate(-50%, -50%);
+  /* centrata */
+  display: none;
+  /* nascosta all’avvio */
   width: clamp(56px, 12vmin, 120px);
   height: auto;
   max-width: 70vw;
@@ -82,11 +100,13 @@ model-viewer::part(announcement)          { display: none; }
   cursor: pointer;
   z-index: 4;
   transition: transform .2s ease, filter .2s ease;
-  filter: drop-shadow(0 10px 30px rgba(0,0,0,.5));
+  filter: drop-shadow(0 10px 30px rgba(0, 0, 0, .5));
 }
+
 #end-image:hover {
-  transform: translate(-50%, calc(-50% - 6px)); /* hover più delicato */
-  filter: drop-shadow(0 16px 40px rgba(0,0,0,.55));
+  transform: translate(-50%, calc(-50% - 6px));
+  /* hover più delicato */
+  filter: drop-shadow(0 16px 40px rgba(0, 0, 0, .55));
 }
 
 /* ===== Tooltip minimal ef.link ===== */
@@ -95,7 +115,7 @@ model-viewer::part(announcement)          { display: none; }
   display: none;
   padding: 0;
   background: none;
-  color: #0000ee;
+  color: #ffffff;
   border: none;
   font-family: "Roboto", sans-serif;
   font-size: 0.9rem;
@@ -106,83 +126,23 @@ model-viewer::part(announcement)          { display: none; }
   transition: opacity .3s ease;
   pointer-events: none;
 }
-#tooltip span { display: inline-block; }
+
+#tooltip span {
+  display: inline-block;
+}
 
 /* 2_Prova per scritta "Image-Conflict" */
 
-/*-------------- CANCELLA da qui: pill-label wave -----------------*/
-#pill-label{
-  /* manopole regolabili */
-  --offset: 18vmin;      /* distanza verticale sotto la pillola */
-  --wave-dur: 2.4s;      /* durata dell'onda (più alto = più lenta) */
-  --stagger: 90ms;       /* ritardo tra lettere (più alto = più separate in ingresso) */
-  --rise: 38px;          /* da quanto “salgono” dal basso in ingresso */
-  --letter-space: .18em; /* distanza orizzontale tra lettere */
-
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, calc(-50% + var(--offset)));
-  z-index: 4;
-  pointer-events: none;
-  opacity: 0;                   /* nascosto finché non si hovera la pillola */
-  transition: opacity .35s ease;
-  white-space: nowrap;
-}
-
-/* stile del testo + spaziatura orizzontale */
-#pill-label .wave{
-  color: #ffffff;
-  font-family: "Roboto", sans-serif;
-  font-weight: 100;
-  font-size: clamp(10px, 2.3vmin, 26px);
-  letter-spacing: var(--letter-space);
-  /* rimuoviamo il vecchio clip-path: l'ingresso ora è per-lettera */
-}
-
-/* ogni lettera: parte invisibile e più in basso; onda in pausa finché non c'è hover */
-#pill-label .wave span{
-  display: inline-block;
-  opacity: 0;
-  transform: translateY(var(--rise));
-  /* ingresso dolce: sale e compare, con ritardo a cascata */
-  transition:
-    transform .7s cubic-bezier(.22,1,.36,1),
-    opacity   .7s ease;
-  transition-delay: calc(var(--i) * var(--stagger));
-
-  /* anima l'onda (verticale) ma rimane in pausa finché non si hovera */
-  animation: wave var(--wave-dur) ease-in-out infinite;
-  animation-delay: calc(400ms + var(--i) * (var(--stagger) + 30ms));
-  animation-play-state: paused;
-}
-
-/* quando si hovera la pillola: mostra il caption e avvia le lettere */
-#end-image:hover ~ #pill-label{ opacity: 1; }
-#end-image:hover ~ #pill-label .wave span{
-  opacity: 1;
-  transform: translateY(0);
-  animation-play-state: running;
-}
-
-/* onda più morbida */
-@keyframes wave{
-  0%,100% { transform: translateY(0); }
-  50%     { transform: translateY(-6px); }
-}
-
-/*-------------- CANCELLA fin a qui: pill-label wave -----------------*/
-
-
 /* === Scheda a 3 colonne in basso (selezionabile) === */
-#pill-info{
+#pill-info {
   position: absolute;
   left: clamp(12px, 3.5vmin, 28px);
   right: clamp(12px, 3.5vmin, 28px);
   bottom: clamp(12px, 3.5vmin, 28px);
 
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr)); /* <-- 3 colonne */
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  /* <-- 3 colonne */
   gap: clamp(10px, 2.2vmin, 24px);
 
   color: #eaeaea00;
@@ -191,7 +151,8 @@ model-viewer::part(announcement)          { display: none; }
   letter-spacing: .01em;
 
   z-index: 5;
-  opacity: 0;                    /* appare solo quando richiesto */
+  opacity: 0;
+  /* appare solo quando richiesto */
   transform: translateY(8px);
   transition: opacity .4s ease, transform .4s ease;
 
@@ -201,22 +162,118 @@ model-viewer::part(announcement)          { display: none; }
 }
 
 /* Stato visibile */
-#pill-info.show{
+#pill-info.show {
   opacity: 1;
   transform: translateY(0);
 }
 
 /* Stili di base interni */
-#pill-info p{ margin: 0 0 .8em 0; }
-#pill-info ul.tight{
+#pill-info p {
+  margin: 0 0 .8em 0;
+}
+
+#pill-info ul.tight {
   margin: .1em 0 .8em 1.1em;
   padding: 0;
 }
 
 /* Responsive: 2 colonne su tablet, 1 su mobile */
-@media (max-width: 1100px){
-  #pill-info{ grid-template-columns: repeat(2, minmax(0, 1fr)); }
+@media (max-width: 1100px) {
+  #pill-info {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
-@media (max-width: 640px){
-  #pill-info{ grid-template-columns: 1fr; }
+
+@media (max-width: 640px) {
+  #pill-info {
+    grid-template-columns: 1fr;
+  }
 }
+
+/* --- Switch lingua (in alto a destra) --- */
+/* Nascosto all'inizio: lo rende visibile il JS a fine video */
+#lang-switch {
+  position: fixed;
+  top: 12px;
+  right: 12px;
+  z-index: 10;
+
+  display: none;
+  /* hidden finché non c'è .show */
+  opacity: 0;
+  /* fade-in morbido */
+  gap: 6px;
+  padding: 6px;
+  border-radius: 10px;
+
+  /* leggibile su scuro ma discreto */
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  backdrop-filter: blur(4px);
+
+  transition: opacity .25s ease;
+}
+
+#lang-switch.show {
+  display: flex;
+  opacity: .65;
+  /* poco visibile */
+}
+
+#lang-switch:hover {
+  opacity: .85;
+  /* leggermente più visibile su hover */
+}
+
+#lang-switch .lang {
+  min-width: 38px;
+  height: 28px;
+  padding: 0 8px;
+
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  border-radius: 6px;
+  color: #fff;
+
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+
+  cursor: pointer;
+  filter: none;
+  opacity: 1;
+  transition: background .15s ease, border-color .15s ease, transform .15s ease;
+}
+
+#lang-switch .lang:hover {
+  transform: translateY(-1px);
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+#lang-switch .lang.active {
+  background: rgba(255, 255, 255, 0.20);
+  border-color: rgba(255, 255, 255, 0.55);
+}
+
+#hover-name,
+#hover-info {
+  position: fixed;
+  top: 0;
+  left: 0;
+  display: none;
+  opacity: 0;
+  transition: opacity .35s ease;
+  /* <— più lento di prima */
+  pointer-events: none;
+  z-index: 9;
+  height: auto;
+  filter: drop-shadow(0 10px 30px rgba(0, 0, 0, .45));
+  user-select: none;
+  will-change: opacity, transform;
+}
+
+#hover-name { width: clamp(150px, 26vmin, 320px); } 
+#hover-info { width: clamp(300px, 34vmin, 640px); } 

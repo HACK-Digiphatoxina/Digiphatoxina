@@ -61,3 +61,18 @@ h1#title-big span.thirty{
 .notice.hidden{display:none}
 
 .hidden{visibility:hidden}
+
+/* Titolo come bottone: manina + testo non selezionabile */
+#titles{
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+#titles *{
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}

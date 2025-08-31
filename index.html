@@ -36,10 +36,15 @@
   <!-- Pillola finale (nascosta di default anche senza CSS) -->
   <img id="end-image" src="tablets_ic.png" alt="Vai a Image-Conflict" style="display:none;" />
 
-  <div id="pill-info" aria-label="Image-Conflict factsheet"></div>
+  <!-- Switch lingua (alto a destra) -->
+  <div id="lang-switch" aria-label="Language" role="radiogroup">
+    <button class="lang active" data-lang="ita" aria-pressed="true" title="Italiano">🇮🇹</button>
+    <button class="lang" data-lang="eng" aria-pressed="false" title="English">🇬🇧</button>
+  </div>
 
-  <!-- Tooltip -->
-  <div id="tooltip">take the medicine :)</div>
+  <!-- Immagini hover che seguono il cursore -->
+  <img id="hover-name" alt="" />
+  <img id="hover-info" alt="" />
 
   <!-- Script (quello che hai già) -->
   <script src="script.js"></script>
