@@ -1,73 +1,67 @@
 /* ===== Fase 2 (Hello Kitty) ===== */
 
-/* Evita selezione + cursore pointer sugli elementi interattivi */
 .h-noselect, .h-noselect *{
   -webkit-user-select:none; -moz-user-select:none; -ms-user-select:none; user-select:none;
   cursor: pointer;
 }
 
-/* Personaggio: margine destro */
+/* Personaggio a destra */
 .h-char{
   position: fixed;
   right: 24px;
   bottom: 24px;
-  width: 240px;         /* regola se vuoi */
+  width: 240px;
   z-index: 9999;
   opacity: 0;
   transition: opacity 300ms ease;
   pointer-events: auto;
 }
 .h-char.show{ opacity: 1; }
-.h-char video, .h-char img{ display:block; width:100%; height:auto; }
+.h-char video{ display:block; width:100%; height:auto; }
 
-/* Nuvoletta a dimensione fissa con becco integrato (bordo 2px) */
+/* Nuvoletta piccola/stretta, con becco integrato in basso a destra */
 .h-bubble{
   position: absolute;
-  right: calc(100% + 14px);   /* a sinistra del personaggio */
-  bottom: 58%;
-  width: 360px;               /* << dimensione fissa */
-  height: 160px;              /* << dimensione fissa */
+  right: calc(100% + 12px);   /* a sinistra del personaggio */
+  bottom: 62%;
+  width: 300px;               /* << più stretta */
+  height: 120px;              /* << più bassa */
   background: #fff;
   color: #000;
   border: 2px solid #000;     /* stroke più sottile */
-  border-radius: 14px;
-  padding: 12px 14px 10px;
+  border-radius: 12px;
+  padding: 10px 12px 8px;
   font: 600 14px/1.25 "Public Sans", sans-serif;
-  box-shadow: 0 4px 0 #000;
+  box-shadow: 0 3px 0 #000;
   opacity: 0;
   transform: translateY(6px);
   transition: opacity .22s ease, transform .22s ease;
-  pointer-events: auto;       /* per cliccare il pulsante */
-  overflow: hidden;           /* il testo sta dentro */
+  pointer-events: auto;
+  overflow: hidden;
 }
 .h-bubble.show{ opacity: 1; transform: translateY(0); }
 .h-bubble.hide{ opacity: 0; transform: translateY(6px); pointer-events:none; }
 
-/* Becco integrato: bordo + riempimento (attaccato al rettangolo) */
+/* Becco: bordo (before) + riempimento (after), attaccato al rettangolo */
 .h-bubble::before,
 .h-bubble::after{
   content:"";
   position:absolute;
-  right:-10px;                 /* attacca al bordo destro */
-  bottom: 28px;
-  width: 0; height: 0;
-  border-top: 10px solid transparent;
-  border-bottom: 10px solid transparent;
+  bottom:-10px;
+  right: 18px;                /* posizione del becco */
+  width:0; height:0;
+  border-left:10px solid transparent;
+  border-right:10px solid transparent;
 }
-.h-bubble::before{             /* bordo esterno */
-  border-left: 12px solid #000;
-  right: -12px;                /* leggermente più esterno per creare il bordo */
-}
-.h-bubble::after{              /* riempimento interno */
-  border-left: 12px solid #fff;
-}
+.h-bubble::before{ border-top:12px solid #000; bottom:-12px; } /* bordo */
+.h-bubble::after { border-top:10px solid #fff; }               /* riempimento */
 
-/* Testo della nuvoletta + caret typewriter */
+/* Testo & caret typewriter */
 .h-bubble-text{
   display:block;
   white-space:pre-wrap;
   letter-spacing:.2px;
-  max-height: 102px;           /* testo dentro (160 - padding - bottone) */
+  max-height: 74px;           /* spazio per il bottone sotto */
   overflow:hidden;
 }
 .h-type-caret{
@@ -80,9 +74,9 @@
 }
 @keyframes blink { 50% { opacity: 0; } }
 
-/* Pulsante “pulsantino” dentro la nuvoletta */
+/* Pulsante (inizialmente nascosto: compare a fine typing) */
 .h-btn{
-  display:inline-block;
+  display:none;               /* << nascosto finché non finisce il typewriter */
   margin-top:10px;
   padding:6px 10px;
   border:2px solid #000;
@@ -92,9 +86,10 @@
   line-height:1;
   box-shadow: 0 3px 0 #000;
 }
+.h-btn.show{ display:inline-block; }
 .h-btn:active{ transform: translateY(1px); box-shadow: 0 2px 0 #000; }
 
-/* Wallpaper che compare dopo il click */
+/* Wallpaper dopo il click */
 .h-wallpaper{
   position: fixed;
   inset: 0;
@@ -105,3 +100,8 @@
   pointer-events:none;
 }
 .h-wallpaper.show{ opacity: 1; }
+
+/* Variante bolla informativa (senza bottone) */
+.h-bubble.h-bubble--info {
+  height: 110px;           /* un filo più bassa, a piacere */
+}
