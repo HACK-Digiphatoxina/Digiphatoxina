@@ -1,0 +1,149 @@
+/* === Personaggio (Hello Kitty) a destra, leggermente più in basso === */
+.h-char{
+  position: fixed;
+  right: 100;            /* attaccato al bordo destro */
+  bottom: 5px;        /* più basso di qualche px (regola a piacere) */
+  width: 240px;
+  z-index: 9999;
+  opacity: 0;
+  transition: opacity 300ms ease;
+  pointer-events: auto;
+}
+.h-char.show{ opacity: 1; }
+.h-char video{ display:block; width:100%; height:auto; }
+
+/* Nuvoletta compatta con triangolo destro sopra al box */
+.h-bubble{
+  position: absolute;
+  right: calc(100% + 12px);     /* a sinistra del personaggio */
+  bottom: 50%;                  /* ABBASSATA (prima 62%) — regola a piacere */
+  width: 200px;
+  height: 72px;                 /* più bassa */
+  background: #fff;
+  color: #000;
+  border: 1px solid #000;
+  border-radius: 12px;
+  padding: 8px 10px 6px;        /* contenuto utile: 72 - (8+6) = 58px */
+  font: 300 13px/1.25 sans-serif;
+  box-shadow: 3px 4px 11px 0px #A3A3A3;
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity .22s ease, transform .22s ease;
+  pointer-events: auto;
+  overflow: visible;            /* il becco deve poter uscire */
+}
+.h-bubble.show{ opacity:1; transform:translateY(0); }
+.h-bubble.hide{ opacity:0; transform:translateY(6px); pointer-events:none; }
+
+/* Triangolo grande, verso destra: bordo nero (sotto) + riempimento bianco (sopra) */
+.h-bubble::before,
+.h-bubble::after{
+  content:"";
+  position:absolute;
+  bottom:14px;                  /* posizione verticale del becco */
+  right:-16px;                  /* sporge a destra sopra al bordo */
+  width:0; height:0;
+}
+.h-bubble::before{
+  border-top:12px solid transparent;
+  border-bottom:10px solid transparent;
+  border-left:18px solid #000;  /* bordo nero */
+  z-index:1;
+}
+.h-bubble::after{
+  right:-15px;                  /* 1px “dentro” per mostrare il bordo */
+  border-top:11px solid transparent;
+  border-bottom:11px solid transparent;
+  border-left:17px solid #fff;  /* lato bianco */
+  z-index:2;                    /* sopra al bordo del box */
+}
+
+/* Testo: capienza ~3 righe senza caret */
+.h-bubble-text{
+  display:block;
+  white-space:pre-wrap;
+  letter-spacing:.2px;
+  max-height: 90px;             /* ~3 righe a 13px*1.25 */
+  overflow:hidden;
+}
+
+/* (Caret rimosso) — se esiste nel DOM, nascondilo */
+.h-type-caret{ display:none !important; }
+
+/* Pulsante (mostrato dal JS a fine typing) */
+.h-btn{
+  display:none;
+  margin-top:6px;
+  padding:6px 5px;
+  border:1px solid #3e3e3e;
+  border-radius:8px;
+  font-weight:400;
+  line-height:1;
+  background-image: linear-gradient(#ffdef0 0%, #fdb9df 25%, #fcdafd 100%);
+}
+.h-btn.show{ display:inline-block; }
+.h-btn:active{
+  transform:translateY(1px);
+  box-shadow: 0 2px rgba(0,0,0,.25), inset 0 1px 0 rgba(255,255,255,.4);
+}
+
+/* Variante info (senza bottone) allineata alla nuova altezza */
+.h-bubble.h-bubble--info{ height:72px; }
+
+/* ==== LANG SWITCH ==== */
+#lang-switch {
+  position: fixed;
+  top: 12px;
+  right: 12px;
+  z-index: 10;
+
+  display: none;           /* hidden finché non c'è .show */
+  opacity: 0;              /* fade-in morbido */
+  gap: 6px;
+  padding: 6px;
+  border-radius: 10px;
+
+  /* leggibile su scuro ma discreto — tua palette */
+  color: #ff00ea;
+  background: #ff00e614;
+  border: 1px solid #ff00e638;
+  backdrop-filter: blur(4px);
+
+  transition: opacity .25s ease;
+}
+#lang-switch.show {
+  display: flex;
+  opacity: .65;            /* poco visibile */
+}
+#lang-switch:hover {
+  opacity: .85;            /* leggermente più visibile su hover */
+}
+#lang-switch .lang {
+  min-width: 38px;
+  height: 28px;
+  padding: 0 8px;
+
+  background: #ff00e10f;
+  border: 1px solid #ff00fb47;
+  border-radius: 6px;
+  color: #ff00ee;
+
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+
+  cursor: pointer;
+  filter: none;
+  opacity: 1;
+  transition: background .15s ease, border-color .15s ease, transform .15s ease;
+}
+#lang-switch .lang:hover {
+  transform: translateY(-1px);
+  background: #ff00f75c;
+  border-color: #ff00f7ae;
+}
+#lang-switch .lang.active {
+  background: #ff00f732;
+  border-color: #ff00f78c;
+}

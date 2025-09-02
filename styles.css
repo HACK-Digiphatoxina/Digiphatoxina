@@ -131,64 +131,6 @@ model-viewer::part(announcement) {
   display: inline-block;
 }
 
-/* 2_Prova per scritta "Image-Conflict" */
-
-/* === Scheda a 3 colonne in basso (selezionabile) === */
-#pill-info {
-  position: absolute;
-  left: clamp(12px, 3.5vmin, 28px);
-  right: clamp(12px, 3.5vmin, 28px);
-  bottom: clamp(12px, 3.5vmin, 28px);
-
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  /* <-- 3 colonne */
-  gap: clamp(10px, 2.2vmin, 24px);
-
-  color: #eaeaea00;
-  font-size: clamp(11px, 1.35vmin, 14px);
-  line-height: 1.45;
-  letter-spacing: .01em;
-
-  z-index: 5;
-  opacity: 0;
-  /* appare solo quando richiesto */
-  transform: translateY(8px);
-  transition: opacity .4s ease, transform .4s ease;
-
-  user-select: text;
-  -webkit-user-select: text;
-  pointer-events: auto;
-}
-
-/* Stato visibile */
-#pill-info.show {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-/* Stili di base interni */
-#pill-info p {
-  margin: 0 0 .8em 0;
-}
-
-#pill-info ul.tight {
-  margin: .1em 0 .8em 1.1em;
-  padding: 0;
-}
-
-/* Responsive: 2 colonne su tablet, 1 su mobile */
-@media (max-width: 1100px) {
-  #pill-info {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-
-@media (max-width: 640px) {
-  #pill-info {
-    grid-template-columns: 1fr;
-  }
-}
 
 /* --- Switch lingua (in alto a destra) --- */
 /* Nascosto all'inizio: lo rende visibile il JS a fine video */
