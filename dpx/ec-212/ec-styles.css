@@ -1,0 +1,157 @@
+/* ===== 2000s MID TEAL THEME (via di mezzo) ===== */
+:root{
+  /* sfondo teal stile desktop old web */
+  --bg:#0f6b79;
+
+  /* pannelli chiari azzurrini tipo forum 2000 */
+  --box:#eef3ff;
+  --line:#cdd7ec;
+
+  /* testi scuri sui pannelli chiari */
+  --fg:#1b2735;
+  --muted:#5e6f88;
+
+  /* link blu-teal + visited lavanda */
+  --link:#1f86a8;
+  --visited:#7a6ee6;
+
+  /* accento mint/teal */
+  --accent:#2eb39f;
+}
+
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0; color:var(--fg); background:var(--bg);
+  font:14px/1.55 Verdana, Geneva, Tahoma, sans-serif;
+}
+
+/* Links */
+a{color:var(--link)}
+a:visited{color:var(--visited)}
+a.read{text-decoration:underline}
+
+/* ===== Topbar ===== */
+.topbar{
+  background: linear-gradient(#e9effc,#d6e1f6);
+  border-bottom:1px solid var(--line);
+  box-shadow: 0 1px 0 rgba(0,0,0,.12);
+}
+.topbar .wrap{display:flex; justify-content:space-between; align-items:center; padding:8px 12px}
+.brand{display:flex; align-items:center; gap:8px}
+.logo{color:#0c2f44; text-decoration:none; font-weight:bold}
+.sitename{color:#153047; text-decoration:none; font-weight:bold}
+.motto{font-size:11px; color:#56708e; margin-left:6px}
+.nav{list-style:none; margin:0; padding:0; display:flex; gap:12px; align-items:center}
+.lang .pill{
+  background:#dde7f9; color:#17314a; border:1px solid #b9c9e6; border-radius:16px; padding:4px 8px; cursor:pointer;
+}
+.lang .pill[aria-pressed="true"]{background:var(--accent); color:#0b1318; border-color:#1f8f80}
+
+/* ===== Layout ===== */
+.wrap{max-width:1120px; margin:0 auto}
+.layout{display:grid; grid-template-columns: 260px 1fr 260px; gap:16px; padding:16px}
+
+/* ===== Boxes & Posts ===== */
+.sidebar .box, .content .post, .content .day, .article, .video-wrap{
+  background: var(--box);
+  border:1px solid var(--line); border-radius:8px;
+  box-shadow: 0 1px 0 rgba(0,0,0,.06);
+}
+.box{overflow:hidden}
+.box-h{
+  background: linear-gradient(#f6f9ff,#edf3ff);
+  padding:8px 10px; font-weight:bold; border-bottom:1px solid var(--line);
+  text-transform: uppercase; letter-spacing:.04em; font-size:12px; color:#1e2d40;
+}
+.box-c{padding:10px}
+.links a{display:block}
+.tags a{margin:2px 6px 2px 0; display:inline-block; color:#136a7f}
+.tags .big{font-size:18px; color:#2eb39f}
+
+/* ===== Forms & Buttons ===== */
+input,button{
+  font: 12px Verdana, sans-serif; color:var(--fg);
+  background:#fff; border:1px solid var(--line); border-radius:4px;
+}
+input{padding:6px; width:100%; margin-bottom:6px}
+.btn{padding:6px 10px; cursor:pointer; background:var(--accent); border-color:#1f8f80; color:#081218}
+.btn.small{padding:4px 8px; font-size:11px}
+
+/* ===== Content Area ===== */
+.content .day{
+  margin-bottom:12px; padding:8px 10px; font-weight:bold; color:#233c56;
+  border-left:4px solid var(--accent);
+}
+.post{padding:12px; margin-bottom:12px}
+.post .h{display:flex; justify-content:space-between; align-items:baseline; gap:10px}
+.post .h a.title{color:#10263a; text-decoration:underline}
+.post .h .date{font-size:11px; color:var(--muted)}
+.post .ex{color:#24374a}
+.post .meta{font-size:11px; color:#5a6a7f; margin-top:6px}
+.post .thumb{float:right; margin:0 0 6px 10px; width:120px; height:auto; border:1px solid var(--line); border-radius:4px}
+.post .badge{display:inline-block; font-size:10px; padding:1px 6px; border:1px solid var(--line); border-radius:8px; margin-left:6px; color:#2a3f56; background:#f4f7ff}
+.post .badge.video{color:#8b5b1f; background:#fff5e9; border-color:#f2d2a6}
+.post .badge.comment{color:#1d3ea8; background:#eef2ff; border-color:#c7d2fe}
+
+/* ===== Meter ===== */
+.meter{height:10px; background:#e7eefc; border:1px solid var(--line); border-radius:999px; overflow:hidden}
+.meter span{display:block; height:100%; background: linear-gradient(90deg,#9ef0db,#47d1b6,#2eb39f)}
+
+/* ===== Article & Special Views ===== */
+.article{padding:14px; margin-bottom:12px}
+.article h2{margin:0 0 8px}
+.article .back{display:inline-block; margin-top:8px; color:#1f86a8}
+.article .grid{display:grid; grid-template-columns: repeat(3,1fr); gap:8px}
+.article .grid img{width:100%; height:auto; border:1px solid var(--line); border-radius:6px}
+
+/* YouTube & GIF in articolo */
+.article .embed{margin:8px 0}
+.article iframe{
+  width:100%;
+  aspect-ratio:16/9;
+  height:auto;
+  border:1px solid var(--line);
+  border-radius:6px;
+  background:#000;
+}
+.article .inline-gif{
+  display:block;
+  width:100%;
+  height:auto;
+  margin-top:8px;
+  border:1px solid var(--line);
+  border-radius:6px;
+}
+
+/* ===== Video Mode ===== */
+.video-wrap{max-width:900px; margin:40px auto; padding:14px}
+.video-head{display:flex; justify-content:space-between; align-items:center}
+video{width:100%; height:auto; display:block; margin-top:10px; background:#000}
+.tip{font-size:12px; color:var(--muted); margin-top:6px}
+
+/* ===== Messages ===== */
+.scrollbox{ max-height:240px; overflow-y:auto; padding-right:6px; }
+.msg{font-size:12px; line-height:1.4; margin:4px 0; color:#1f2f42}
+.msg .who{color:#2eb39f}
+.msg .sep{color:#8aa0c0; padding:0 4px}
+
+/* ===== Banner / Blinkie ===== */
+.ad{display:grid; place-items:center; gap:8px}
+.blinkie-img{image-rendering:pixelated; border:1px solid #b9c9e6; border-radius:6px; max-width:100%;}
+.blinkie-fallback{ background:#2eb39f; color:#0b1318; border-color:#1f8f80 }
+
+/* ===== Footer ===== */
+.foot{
+  margin-top:20px; padding:18px 10px; text-align:center; color:#1b2735;
+  border-top:1px solid var(--line); background:#e7eefc
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 960px){
+  .layout{grid-template-columns: 1fr}
+  .article .grid{grid-template-columns: 1fr 1fr}
+}
+@media (max-width: 520px){
+  .article .grid{grid-template-columns: 1fr}
+}

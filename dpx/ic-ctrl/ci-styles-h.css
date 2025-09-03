@@ -1,8 +1,8 @@
 /* === Personaggio (Hello Kitty) a destra, leggermente più in basso === */
 .h-char{
   position: fixed;
-  right: 100;            /* attaccato al bordo destro */
-  bottom: 5px;        /* più basso di qualche px (regola a piacere) */
+  right: 0;            /* attaccato al bordo destro */
+  bottom: 12px;        /* più basso di qualche px (regola a piacere) */
   width: 240px;
   z-index: 9999;
   opacity: 0;
@@ -15,8 +15,8 @@
 /* Nuvoletta compatta con triangolo destro sopra al box */
 .h-bubble{
   position: absolute;
-  right: calc(100% + 12px);     /* a sinistra del personaggio */
-  bottom: 50%;                  /* ABBASSATA (prima 62%) — regola a piacere */
+  right: calc(90% + 12px);     /* a sinistra del personaggio */
+  bottom: -35px;                  /* ABBASSATA (prima 62%) — regola a piacere */
   width: 200px;
   height: 72px;                 /* più bassa */
   background: #fff;

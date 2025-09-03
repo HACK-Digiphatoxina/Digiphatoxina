@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>EO – Meme Playground</title>
+  <link rel="stylesheet" href="eo-styles.css" />
+</head>
+<body>
+
+  <!-- Snail starter: entra da basso-destra, si ferma a 1/4 pagina e funge da "Start" -->
+  <video id="snail" src="snail.webm" autoplay muted loop playsinline></video>
+
+  <!-- Teeth (si muovono da subito) -->
+  <img id="teeth-up" src="teeth-up.png" alt="" aria-hidden="true" />
+  <img id="teeth-down" src="teeth-down.png" alt="" aria-hidden="true" />
+
+  <!-- DORA + testo (nascosti finché non clicchi lo snail) -->
+  <div id="dora-layer" class="hidden" aria-hidden="true">
+    <div id="mcluhan" class="coral-pixels-regular">The Meme is the message</div>
+    <video id="dora"
+           src="https://media.tenor.com/OAeGD1ICPJIAAAPo/dora-hola.mp4"
+           preload="none" playsinline loop muted></video>
+  </div>
+
+  <!-- Meme (nascosti finché non clicchi lo snail) -->
+  <main id="playground" class="playground hidden" aria-label="Meme Playground"></main>
+
+  <script src="eo-script.js"></script>
+</body>
+</html>

@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>PurrNet — Cats are God</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="icon" href="assets/cat-fav.ico" />
+  <link rel="stylesheet" href="ec-styles.css" />
+</head>
+<body>
+
+  <!-- TOP BAR -->
+  <div class="topbar">
+    <div class="wrap">
+      <div class="brand">
+        <a href="./" class="logo" title="Home">=^..^=</a>
+        <a href="./" class="sitename" id="siteTitle">PurrNet</a>
+        <span class="motto">RSS2.0 • echo-chamber</span>
+      </div>
+      <ul class="nav">
+        <li><a id="navHome" href="./">Home</a></li>
+        <li><a id="navArchive" href="#archivio">Archive</a></li>
+        <li><a id="navAbout" href="?about=1">About</a></li>
+        <!-- Lang switch -->
+        <li class="lang">
+          <button id="btnEN" class="pill" aria-pressed="true">EN</button>
+          <button id="btnIT" class="pill" aria-pressed="false">IT</button>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- LAYOUT -->
+  <div class="wrap layout">
+    <!-- SIDEBAR LEFT -->
+    <aside class="sidebar">
+      <div class="box">
+        <div class="box-h" data-i18n="login_h">Login</div>
+        <div class="box-c">
+          <form class="login" onsubmit="return false">
+            <label><span data-i18n="user">user</span><br><input type="text" placeholder="guest" /></label>
+            <label><span data-i18n="pass">pass</span><br><input type="password" placeholder="••••••" /></label>
+            <button type="button" class="btn" data-i18n="signin">Sign in (fake)</button>
+          </form>
+        </div>
+      </div>
+
+      <div class="box">
+        <div class="box-h">Echo-Meter</div>
+        <div class="box-c">
+          <div class="meter"><span id="echoFill" style="width:10%"></span></div>
+          <p class="muted"><span id="echoCount">0</span> reiterations</p>
+          <button class="btn small" data-boost="3" data-i18n="amplify">Amplify (＋)</button>
+        </div>
+      </div>
+
+      <div class="box">
+        <div class="box-h" data-i18n="tags_h">Tags</div>
+        <div class="box-c tags">
+          <a href="#">science</a>
+          <a href="#" class="big">miracles</a>
+          <a href="#">miao</a>
+          <a href="#" class="big">internet</a>
+          <a href="#">bestiary</a>
+        </div>
+      </div>
+
+      <div class="box">
+        <div class="box-h" data-i18n="blogroll_h">Blogroll</div>
+        <div class="box-c links">
+          <a href="#" title="forum">Miao Forum</a>
+          <a href="#" title="faq">FAQ</a>
+          <a href="#" title="manifesto">Manifesto</a>
+        </div>
+      </div>
+    </aside>
+
+    <!-- CONTENT -->
+    <main class="content" id="content">
+      <noscript><div class="post">Enable JavaScript to see the blog.</div></noscript>
+    </main>
+
+    <!-- SIDEBAR RIGHT -->
+    <aside class="sidebar right">
+      <!-- BANNER / BLINKIE -->
+      <div class="box">
+        <div class="box-h">Banner</div>
+        <div class="box-c ad">
+          <!-- Link diretto alla modalità video -->
+          <a id="blinkieLink" href="?video=assets/purr-trance.mp4&next=%23genesi-miao" title="Meow trance">
+            <img id="blinkieImg"
+                 src="https://media1.tenor.com/m/5UBM_klAZ-UAAAAd/meow-blinkie.gif"
+                 alt="Meow blinkie" class="blinkie-img" loading="lazy" />
+          </a>
+          <!-- Fallback se il GIF non carica -->
+          <button id="blinkieFallback" class="btn blinkie-fallback" style="display:none">
+            ▶ Meow Trance
+          </button>
+        </div>
+      </div>
+
+      <!-- MESSAGES -->
+      <div class="box">
+        <div class="box-h" data-i18n="messages_h">Messages</div>
+        <div class="box-c">
+          <div id="messages" class="scrollbox"></div>
+        </div>
+      </div>
+
+      <div class="box">
+        <div class="box-h" data-i18n="credits_h">Credits</div>
+        <div class="box-c">
+          <p class="muted" data-i18n="credits_txt">2000s theme (mid-teal). Satirical project.</p>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <footer class="foot wrap">
+    un sito di gatti creato da gatti
+  </footer>
+
+  <script src="ec-script.js" defer></script>
+</body>
+</html>

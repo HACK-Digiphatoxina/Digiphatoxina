@@ -1,0 +1,128 @@
+:root{ 
+  --meme-width: 220px;
+
+  /* Teeth */
+  --teeth-duration: 200s;
+  --teeth-timing: linear;
+  --teeth-up-final: -70px;   /* up resta 70px fuori dal bordo alto */
+  --teeth-down-final: -80px; /* down resta 80px sopra il bordo basso (valore negativo nella calc) */
+}
+
+/* Font helper (come da snippet) */
+.coral-pixels-regular {
+  font-family: sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+* { box-sizing: border-box; }
+html, body { height: 100%; }
+
+body{
+  margin: 0;
+  background: #fff;
+  overflow: hidden;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans";
+}
+
+.hidden{ display: none !important; }
+
+/* ===== Snail starter ===== */
+#snail{
+  position: fixed;
+  bottom: 4vh;               /* leggermente staccato dal fondo */
+  left: 100vw;               /* parte fuori dallo schermo a destra */
+  width: 120px;              /* regola a piacere */
+  height: auto;
+  z-index: 20;               /* sopra ai teeth */
+  cursor: pointer;           /* è cliccabile come bottone */
+  pointer-events: auto;
+}
+
+/* ===== Teeth ===== */
+#teeth-up, #teeth-down{
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100vw;
+  height: auto;
+  pointer-events: none;
+  user-select: none;
+}
+#teeth-up{
+  top: 0;
+  z-index: 16; /* sopra il down */
+  transform: translate(-50%, -100%);
+  animation: teethDown var(--teeth-duration) var(--teeth-timing) forwards;
+}
+#teeth-down{
+  bottom: 0;
+  z-index: 15; /* sotto l'up */
+  transform: translate(-50%, 100%);
+  animation: teethUp var(--teeth-duration) var(--teeth-timing) forwards;
+}
+@keyframes teethDown{
+  to { transform: translate(-50%, var(--teeth-up-final)); }
+}
+@keyframes teethUp{
+  to { transform: translate(-50%, calc(-1 * var(--teeth-down-final))); }
+}
+
+/* ===== DORA + testo sotto ai meme ===== */
+#dora-layer{
+  position: fixed;
+  inset: 0;
+  z-index: 0;               /* sotto ai meme (z=2) */
+  display: grid;
+  place-items: center;
+}
+#dora{
+  width: min(30vw, 380px);
+  height: auto;
+  opacity: 0.95;
+  pointer-events: none;
+}
+
+/* Testo visibile (grigio chiaro), centrato sopra DORA e sotto ai meme */
+#mcluhan{
+  position: absolute;
+  top: 39%;
+  left: 50%;
+  transform: translate(-50%, calc(-50% - 12vh));
+  color: #f9f9f9;          /* grigio molto chiaro */
+  font-size: clamp(10px, 2.6vw, 22px);
+  font-weight: 400;
+  line-height: 1.1;
+  z-index: 1;              /* sopra DORA (0), sotto meme (2) */
+  user-select: text;
+}
+
+/* ===== Meme playground (primo piano) ===== */
+.playground{
+  position: fixed;
+  inset: 0;
+  z-index: 2;              /* primo piano */
+}
+
+/* Ogni meme (container) */
+.meme{
+  position: absolute;
+  width: var(--meme-width);
+  height: auto;
+  cursor: grab;
+  user-select: none;
+  touch-action: none;
+  will-change: transform;
+}
+.meme:active{ cursor: grabbing; }
+
+/* >>> tua modifica: immagini/video al 50% del container */
+.meme > img,
+.meme > video{
+  display: block;
+  width: 50%;
+  height: auto;
+  border-radius: 6px;
+}
+
+.meme.hovering{ transform: translateZ(0) scale(1.03); }
