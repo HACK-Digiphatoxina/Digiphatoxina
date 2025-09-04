@@ -3,15 +3,19 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>EO – Meme Playground</title>
+  <title>EO-24/7</title>
   <link rel="stylesheet" href="eo-styles.css" />
 </head>
 <body>
 
-  <!-- Snail starter: entra da basso-destra, si ferma a 1/4 pagina e funge da "Start" -->
-  <video id="snail" src="snail.webm" autoplay muted loop playsinline></video>
+  <!-- Snail starter -->
+  <video id="snail" preload="auto" muted playsinline loop>
+    <source src="snail.webm?v=4" type="video/webm">
+    <!-- opzionale fallback:
+    <source src="snail.mp4?v=4" type="video/mp4"> -->
+  </video>
 
-  <!-- Teeth (si muovono da subito) -->
+  <!-- Teeth (fermi fino al click) -->
   <img id="teeth-up" src="teeth-up.png" alt="" aria-hidden="true" />
   <img id="teeth-down" src="teeth-down.png" alt="" aria-hidden="true" />
 
@@ -23,7 +27,7 @@
            preload="none" playsinline loop muted></video>
   </div>
 
-  <!-- Meme (nascosti finché non clicchi lo snail) -->
+  <!-- Meme -->
   <main id="playground" class="playground hidden" aria-label="Meme Playground"></main>
 
   <script src="eo-script.js"></script>

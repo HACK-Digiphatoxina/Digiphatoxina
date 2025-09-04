@@ -34,28 +34,28 @@
   const CLOSE_OTHERS_AFTER_11_MS = 8000;  // 8s prima di chiudere tutte tranne #11 e passare alla fase 2
 
   const popup = [
-    { src: 'gif_lgm-30a/LGM-30A_1.webm', width: 250, height: 280, left: 130, top: 50, scale: 0.85 },
-    { src: 'gif_lgm-30a/LGM-30A_2.webm', width: 290, height: 220, left: 90, top: 310, scale: 0.85 },
+    { src: 'gif_lgm-30a/LGM-30A_1.webm', width: 250, height: 280, left: 130, top: 50,  scale: 0.85 },
+    { src: 'gif_lgm-30a/LGM-30A_2.webm', width: 290, height: 220, left: 90,  top: 310, scale: 0.85 },
     { src: 'gif_lgm-30a/LGM-30A_3.webm', width: 380, height: 210, left: 100, top: 600, scale: 0.85 },
-    { src: 'gif_lgm-30a/LGM-30A_4.webm', width: 280, height: 300, left: 430, top: 20, scale: 0.85 },
+    { src: 'gif_lgm-30a/LGM-30A_4.webm', width: 280, height: 300, left: 430, top: 20,  scale: 0.85 },
     { src: 'gif_lgm-30a/LGM-30A_5.webm', width: 400, height: 190, left: 360, top: 320, scale: 0.85 },
     { src: 'gif_lgm-30a/LGM-30A_6.webm', width: 400, height: 240, left: 500, top: 650, scale: 0.85 },
     { src: 'gif_lgm-30a/LGM-30A_7.webm', width: 400, height: 150, left: 900, top: 700, scale: 0.85 },
-    { src: 'gif_lgm-30a/LGM-30A_8.webm', width: 290, height: 300, left: 1170, top: 320, scale: 0.85 },
+    { src: 'gif_lgm-30a/LGM-30A_8.webm', width: 290, height: 300, left: 1170,top: 320, scale: 0.85 },
     { src: 'gif_lgm-30a/LGM-30A_9.webm', width: 350, height: 330, left: 750, top: 140, scale: 0.85 },
-    { src: 'gif_lgm-30a/LGM-30A_10.webm', width: 250, height: 290, left: 1150, top: 35, scale: 0.85 },
-    // lascia height: 10 come vuoi tu
-    { src: 'gif_lgm-30a/LGM-30A_11.webm', width: 420, height: 10, left: 850, top: 20, scale: 0.85 }
+    { src: 'gif_lgm-30a/LGM-30A_10.webm',width: 250, height: 290, left: 1150,top: 35,  scale: 0.85 },
+    { src: 'gif_lgm-30a/LGM-30A_11.webm',width: 420, height: 10,  left: 850, top: 20,  scale: 0.85 }
   ];
 
-  // ====== PRE-INTRO ASSISTANT ======
+  // ====== PRE-INTRO ASSISTANT (FASE 1) ======
   (function () {
     const CHARACTER = {
       enter: "hk_animation/hk_enter.webm",
       hello: "hk_animation/hk_hello.webm",
+      ehi:   "hk_animation/hk_ehi.webm",   // loop dopo hello
       exit:  "hk_animation/hk_exit.webm",
       size: 240,
-      pos: { right: 0, bottom: 180 },     // POS FISSA
+      pos: { right: 0, bottom: 180 },
       standbyPng: "hk_animation/hk_default.png"
     };
 
@@ -65,12 +65,12 @@
     let currentLang = 'eng';
     const TEXTS = {
       eng: {
-        headline: "To continue you need to disable the pop-up blocker.",
+        headline: "Hi! I'm Hello Kitty, happy to help you! Before we begin, remember to allow pop-ups and redirects from this site: they’re only here to make your experience more fun and interesting. Don’t worry, your computer is safe!",
         button: "Got it",
         stillBlocked: "Pop-ups still blocked. Please disable the pop-up blocker and try again."
       },
       ita: {
-        headline: "Per proseguire devi disattivare il blocco dei pop-up.",
+        headline: "Ciao! Sono Hello Kitty, felice di aiutarti! Prima di iniziare, ricordati di consentire i pop-up e i reindirizzamenti da questo sito: servono solo a rendere la tua esperienza più interessante. Tranquillo, il tuo computer è al sicuro!",
         button: "Ho capito",
         stillBlocked: "I pop-up risultano ancora bloccati. Disattiva il blocco e riprova."
       }
@@ -79,6 +79,33 @@
 
     // stato DOM
     let charEl = null, vA = null, vB = null, active = 'A', standbyImg = null, introBubbleEl = null;
+
+    // ===== Bubble sizing come Fase 2 (misura → altezza fissa adeguata) =====
+    function createBubbleMeasurer() {
+      const probe = document.createElement('div');
+      Object.assign(probe.style, {
+        position: 'absolute', visibility: 'hidden', pointerEvents: 'none', zIndex: '-1',
+        whiteSpace: 'pre-wrap', letterSpacing: '.2px',
+        font: '300 13px/1.25 "Public Sans", sans-serif',
+        width: '200px', boxSizing: 'content-box'
+      });
+      document.body.appendChild(probe);
+      return function measure(text, { hasButton = false, bubblePaddingV = 14, minH = 72, maxH = 160 } = {}) {
+        probe.textContent = text || '';
+        const textH = probe.scrollHeight; const btnH = hasButton ? 28 : 0;
+        const total = Math.ceil(textH + bubblePaddingV + btnH);
+        return Math.max(minH, Math.min(maxH, total));
+      };
+    }
+    const measureBubble = createBubbleMeasurer();
+    function applyBubbleFixedHeight(bubbleEl, textEl, finalText, { hasButton = false } = {}) {
+      const paddingV = 8 + 6;
+      const finalH = measureBubble(finalText, { hasButton, bubblePaddingV: paddingV, minH: 72, maxH: 160 });
+      bubbleEl.style.height = finalH + 'px';
+      const reservedForBtn = hasButton ? 28 : 0;
+      const maxTextH = Math.max(0, finalH - paddingV - reservedForBtn);
+      textEl.style.maxHeight = maxTextH + 'px';
+    }
 
     // video helpers
     function getActiveV() { return active === 'A' ? vA : vB; }
@@ -107,24 +134,19 @@
       return act;
     }
 
-    // MONTA PERSONAGGIO (FIX POS qui)
+    // MONTA PERSONAGGIO
     function mountCharacter() {
       charEl = document.createElement('div');
       charEl.className = 'h-char h-noselect';
-      // FIX POS: forzo tutto in px, annullo altri offset e trasformazioni
       Object.assign(charEl.style, {
         position: 'fixed',
         right: CHARACTER.pos.right + 'px',
         bottom: CHARACTER.pos.bottom + 'px',
-        top: '',      // <— evita override accidentali
-        left: '',
-        transform: 'none',
         width: CHARACTER.size + 'px',
-        zIndex: '2147483647',   // sempre davanti
+        zIndex: '2147483647',
         pointerEvents: 'auto'
       });
 
-      // due layer video
       vA = document.createElement('video'); vB = document.createElement('video');
       [vA, vB].forEach(v => {
         Object.assign(v.style, {
@@ -136,7 +158,6 @@
       vA.style.zIndex = '2'; vA.style.opacity = '1';
       charEl.appendChild(vA); charEl.appendChild(vB);
 
-      // PNG standby (copre micro-gap)
       standbyImg = document.createElement('img');
       standbyImg.src = CHARACTER.standbyPng; standbyImg.alt = 'HK';
       Object.assign(standbyImg.style, {
@@ -145,45 +166,44 @@
       });
       charEl.appendChild(standbyImg);
 
-      // Nuvoletta (stesso stile fase 2) + FIX POS bubble
+      // Bubble (come Fase 2) — PIÙ BASSO
       introBubbleEl = document.createElement('div');
       introBubbleEl.className = 'h-bubble';
       introBubbleEl.innerHTML = `<span class="h-bubble-text" id="hk_bubble_text"></span><button type="button" class="h-btn" id="hk_btn"></button>`;
       charEl.appendChild(introBubbleEl);
-      introBubbleEl.style.bottom = '20px'; // quota in px → visiva fissa
+      introBubbleEl.style.bottom = '-10px';
 
       document.body.appendChild(charEl);
       requestAnimationFrame(() => charEl.classList.add('show'));
 
-      // RE-ASSERT posizione anche dopo un reflow/resize (difese extra)
       const reassert = () => {
-        Object.assign(charEl.style, {
-          right: CHARACTER.pos.right + 'px',
-          bottom: CHARACTER.pos.bottom + 'px',
-          top: '', left: '', transform: 'none'
-        });
-        if (introBubbleEl) introBubbleEl.style.bottom = '20px';
+        charEl.style.right = CHARACTER.pos.right + 'px';
+        charEl.style.bottom = CHARACTER.pos.bottom + 'px';
+        if (introBubbleEl) introBubbleEl.style.bottom = '-10px';
       };
       setTimeout(reassert, 0);
       window.addEventListener('resize', reassert);
     }
 
-    function typeWriter(el, text, cps = 24, done) {
-      const ms = Math.max(18, Math.round(1000 / cps));
-      el.textContent = ''; let i = 0; (function tick() { if (i < text.length) { el.textContent += text[i++]; setTimeout(tick, ms); } else { done && done(); } })();
+    // TYPEWRITER PIÙ VELOCE
+    function typeWriter(el, text, cps = 52, done) {
+      const ms = Math.max(8, Math.round(1000 / cps));
+      el.textContent = '';
+      let i = 0, t = null, finished = false;
+      const finish = () => { if (finished) return; finished = true; if (t) clearTimeout(t); el.textContent = text; done && done(); };
+      const tick = () => { if (finished) return; if (i < text.length) { el.textContent += text[i++]; t = setTimeout(tick, ms); } else finish(); };
+      t = setTimeout(tick, ms);
     }
 
-    // switch lingua (#lang-switch già nel DOM)
+    // switch lingua
     function initLangSwitch() {
       const sw = document.getElementById('lang-switch');
       if (!sw) return;
-      // all’inizio della fase 1: mostralo e bloccalo (sarà sbloccato a fine typewriter)
       _showLangSwitch();
-
       const btns = sw.querySelectorAll('.lang');
       btns.forEach(btn => {
         btn.addEventListener('click', () => {
-          if (btn.disabled) return; // se bloccato, ignora
+          if (btn.disabled) return;
           const lang = btn.getAttribute('data-lang');
           if (!lang || lang === currentLang) return;
           currentLang = lang;
@@ -194,9 +214,10 @@
           });
           if (introBubbleEl) {
             const textEl = introBubbleEl.querySelector('#hk_bubble_text');
-            const btnEl = introBubbleEl.querySelector('#hk_btn');
+            const btnEl  = introBubbleEl.querySelector('#hk_btn');
             textEl.textContent = t('headline');
-            btnEl.textContent = t('button');
+            btnEl.textContent  = t('button');
+            applyBubbleFixedHeight(introBubbleEl, textEl, t('headline'), { hasButton: true });
           }
         });
       });
@@ -216,61 +237,76 @@
       try { await audioEl.play(); audioEl.pause(); audioEl.currentTime = 0; } catch { }
     }
 
-    // avvio
+    // KILL SWITCH per lo skip
+    let preIntroStopped = false;
+    function stopPreIntro(){
+      preIntroStopped = true;
+      try { if (vA) { vA.onended = null; vA.pause(); vA.removeAttribute('src'); vA.load(); } } catch {}
+      try { if (vB) { vB.onended = null; vB.pause(); vB.removeAttribute('src'); vB.load(); } } catch {}
+      try { if (introBubbleEl) introBubbleEl.remove(); } catch {}
+      try { if (charEl) charEl.remove(); } catch {}
+      _hideLangSwitch();
+    }
+
     async function runPreIntro({ onProceed }) {
-      initLangSwitch();         // mostra le bandiere
-      _lockLangSwitch(true);    // bloccale durante la scrittura
+      initLangSwitch();
+      _lockLangSwitch(true);
 
       mountCharacter();
 
-      // enter → hello
       await playInstant(CHARACTER.enter, { loop: false, useStandby: false });
       getActiveV().onended = async () => {
-        try { getActiveV().pause(); } catch { }
+        if (preIntroStopped) return;
+        try { getActiveV().pause(); } catch {}
+
         await playInstant(CHARACTER.hello, { loop: false, useStandby: true });
+        if (preIntroStopped) return;
+
+        // appena finisce "hello", parte "ehi" in loop
+        await playInstant(CHARACTER.ehi, { loop: true, useStandby: true });
+        if (preIntroStopped) return;
 
         // bubble
         const textEl = introBubbleEl.querySelector('#hk_bubble_text');
-        const btn = introBubbleEl.querySelector('#hk_btn');
-        textEl.textContent = '';
+        const btn    = introBubbleEl.querySelector('#hk_btn');
         btn.textContent = t('button');
         introBubbleEl.classList.add('show');
 
-        typeWriter(textEl, t('headline'), 24, () => {
+        // calcolo altezza PRIMA del typing
+        applyBubbleFixedHeight(introBubbleEl, textEl, t('headline'), { hasButton: true });
+        typeWriter(textEl, t('headline'), 52, () => {
           btn.classList.add('show');
-          _lockLangSwitch(false); // a fine typing si possono cambiare lingua
+          _lockLangSwitch(false);
         });
 
         btn.addEventListener('click', async () => {
-          // sblocca audio
           const audioEl = document.getElementById('intro-audio');
           if (audioEl) await primeAudio(audioEl);
 
-          // check pop-up (opzionale)
           if (POPUP_CHECK_ENABLED && !popupsAllowedNow()) {
-            textEl.textContent = t('stillBlocked');
+            const warn = t('stillBlocked');
+            textEl.textContent = warn;
+            applyBubbleFixedHeight(introBubbleEl, textEl, warn, { hasButton: true });
             btn.classList.remove('show');
             setTimeout(() => { btn.classList.add('show'); btn.textContent = t('button'); }, 1200);
             return;
           }
 
-          // chiudi bubble
           introBubbleEl.classList.add('hide');
           setTimeout(() => { try { introBubbleEl.remove(); } catch { } }, 220);
 
-          // EXIT → al termine sparisce tutto, nascondi bandiere, partono titoli+pop-up
           const act = await playInstant(CHARACTER.exit, { loop: false, useStandby: true });
           act.onended = () => {
             try { act.pause(); } catch { }
             try { charEl.remove(); } catch { }
-            _hideLangSwitch();          // << nascondi bandiere finché non ricompare HK in fase 2
+            _hideLangSwitch();
             if (typeof onProceed === 'function') onProceed();
           };
         }, { once: true });
       };
     }
 
-    window.__preIntroAssistant = { start: runPreIntro };
+    window.__preIntroAssistant = { start: runPreIntro, stop: stopPreIntro };
   })();
 
   // ====== STATE POPUP ======
@@ -376,11 +412,7 @@
 
   function startChainFromSecond() {
     const batches = [
-      [2],        // #3
-      [3, 4],     // #4 & #5
-      [5, 6],     // #6 & #7
-      [7, 8],     // #8 & #9
-      [9, 10]     // #10 & #11
+      [2], [3,4], [5,6], [7,8], [9,10]
     ];
     batches.forEach((indices, batchIdx) => {
       const id = setTimeout(() => {
@@ -410,7 +442,6 @@
     }, MONITOR_MS);
   }
 
-  // spegnimento definitivo (chiamato dalla Fase 2 quando premi "pulsantino")
   function disablePhase1Popups() {
     try { audio.pause(); audio.currentTime = 0; } catch { }
     PERSISTENT = false;
@@ -424,20 +455,37 @@
   }
   document.addEventListener('phase:popups:disable', disablePhase1Popups);
 
-  // H+K skip
+  // H+K SKIP
   let hkSkipTriggered = false;
   const keyState = { h: false, k: false };
   let hkComboTimer = null;
   const HK_COMBO_MS = 800;
   function resetHKComboTimer() { if (hkComboTimer) clearTimeout(hkComboTimer); hkComboTimer = setTimeout(() => { keyState.h = keyState.k = false; }, HK_COMBO_MS); }
+
   function triggerHKSkip() {
-    if (hkSkipTriggered) return; hkSkipTriggered = true;
+    if (hkSkipTriggered) return; 
+    hkSkipTriggered = true;
+
+    // stoppa SUBITO la Fase 1
+    if (window.__preIntroAssistant && typeof window.__preIntroAssistant.stop === 'function') {
+      try { window.__preIntroAssistant.stop(); } catch {}
+    }
+
     disablePhase1Popups();
     titles && titles.classList.add('fadeout');
-    _hideLangSwitch(); // assicurati che sparisca anche nello skip
-    try { document.dispatchEvent(new CustomEvent("phase:assistant:start", { detail: { handle11: null, position: null } })); } catch { }
-    keyState.h = keyState.k = false; if (hkComboTimer) { clearTimeout(hkComboTimer); hkComboTimer = null; }
+    _hideLangSwitch();
+
+    // passa a Fase 2
+    try {
+      document.dispatchEvent(new CustomEvent("phase:assistant:start", {
+        detail: { handle11: null, position: null }
+      }));
+    } catch {}
+
+    keyState.h = keyState.k = false;
+    if (hkComboTimer) { clearTimeout(hkComboTimer); hkComboTimer = null; }
   }
+
   function onKeyDown(e) {
     const k = (e.key || '').toLowerCase();
     if (k === 'h') keyState.h = true;
@@ -454,13 +502,8 @@
 
   // ---------- AVVIO ----------
   window.addEventListener('DOMContentLoaded', () => {
-    // NON nascondiamo subito: l’intro deve mostrarle; sarà la Fase 2 a ri-mostrare più avanti.
-    // _hideLangSwitch();
-
-    // pre-intro con HK → exit → poi titoli+popups
     window.__preIntroAssistant.start({
       onProceed: () => {
-        // ora sì: titoli e sequenza
         showTitles();
         try { restartAudio(); } catch { }
         introduce(0, { restart: false });
@@ -468,7 +511,6 @@
       }
     });
 
-    // click sul titolo: porta in primo piano le finestre
     titles.addEventListener('click', () => {
       const openIndexes = [];
       for (let i = 0; i < handles.length; i++) {
@@ -483,7 +525,6 @@
       }, openIndexes.length * 40 + 20);
     });
 
-    // attiva skip H+K
     window.addEventListener('keydown', onKeyDown);
     window.addEventListener('keyup', onKeyUp);
   });

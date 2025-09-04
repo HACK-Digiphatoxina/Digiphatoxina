@@ -1,11 +1,15 @@
-/* EO – Meme Playground (v5)
-   - DORA resta nascosta fino a Start
-   - Testo selezionabile senza script extra
+/* EO – Meme Playground (full, v8)
+   - Snail come start: da dx -> si ferma col CENTRO a 1/4 pagina, poi freeze ultimo frame
+   - Click sullo snail: abilita audio hover, mostra DORA + MEME, avvia teeth
+   - Teeth: partono solo dopo click; al termine di entrambi -> redirect
+   - Drag fix: i limiti usano la dimensione VISIVA del contenuto (img/video al 50%)
 */
 
 const audioBasePath = "./eo-audio/";
 
-/* Inserisci qui la tua lista MEMES già usata in precedenza */
+/* === Contenuti ===
+   Incolla qui la tua lista completa se già ce l'hai.
+   Puoi lasciare un array vuoto per testare solo la struttura. */
 const MEMES = [
   // --- VIDEO / MP4 ---
   { src: "https://media.tenor.com/9qAbEfFruh0AAAPo/%E0%B8%88%E0%B8%B8%E0%B9%8A%E0%B8%9A.mp4", audios: ["smash-mouth-all-star.mp3"] },
@@ -28,7 +32,6 @@ const MEMES = [
   { src: "https://media.tenor.com/gNToyJRX5ekAAAPo/nugget-chicken.mp4", audios: ["gedagedigedagedago.mp3"] },
   { src: "https://media.tenor.com/9niKyDAAqPoAAAPo/benjammins-holiday.mp4", audios: ["nothing-beats-a-jet2-holiday_IeBO1Mr.mp3"] },
   { src: "https://media.tenor.com/WarZqLGgTHoAAAPo/oh-no-cringe-cringe.mp4", audios: ["oh-no-cringe.mp3"] },
-  { src: "https://media.tenor.com/aAPkGdhjJdMAAAPo/meow-magix.mp4", audios: ["dry-fart_3.mp3","wrong-answer-sound-effect.mp3","coche-claxon.mp3"] },
   { src: "https://media.tenor.com/xJQzFjwewOkAAAPo/cat-gato.mp4", audios: ["explosion-meme_dTCfAHs.mp3"] },
   { src: "https://media.tenor.com/jHvyFefhKmcAAAPo/mujikcboro-seriymujik.mp4", audios: ["sigma-boy-bass-boosted-caca.mp3"] },
   { src: "https://media.tenor.com/1mekY2yeGWkAAAPo/sigma.mp4", audios: ["sigmamy.mp3"] },
@@ -38,10 +41,8 @@ const MEMES = [
   { src: "https://media.tenor.com/2Q2vioFDFEoAAAPo/plankton-plankton-meme.mp4", audios: ["plancton-meme.mp3"] },
   { src: "https://media.tenor.com/fWqq9QLFyJgAAAPo/okboomer-tamambuum%C4%B1r.mp4", audios: ["peter-kuli-jedwill-ok-boomer-official-music-video-mp3cut.mp3"] },
   { src: "https://media.tenor.com/1cyULmHwFyEAAAPo/hawk-tuah-hawktuah.mp4", audios: ["hawk-tuah_SRaUp2L.mp3"] },
-  { src: "https://media.tenor.com/hIZ3rTWUGGoAAAPo/ahhh.mp4", audios: ["auughhh.mp3"] },
   { src: "https://media.tenor.com/T1zotsnaPJsAAAPo/bruh-meme.mp4", audios: ["bruh-sound-effect_WstdzdM.mp3"] },
   { src: "https://media.tenor.com/N4rXobIuGU4AAAPo/cat-meme.mp4", audios: ["classic_hurt.mp3"] },
-  { src: "https://media.tenor.com/W779wwKlz9QAAAPo/dancing-rat-dance.mp4", audios: ["rat-dance-music.mp3"] },
   { src: "https://media.tenor.com/u8M7kk5ZXmwAAAPo/banana-cat-crying.mp4", audios: ["cry-banana-cat.mp3"] },
   { src: "https://media.tenor.com/_1hMqyFC4LEAAAPo/pop-cat.mp4", audios: ["cat-mouth-noise-192-kbps.mp3"] },
   { src: "https://media.tenor.com/bXjzL5fdskwAAAPo/mellstroy.mp4", audios: ["am-am-am-am-mellstroy.mp3"] },
@@ -58,7 +59,6 @@ const MEMES = [
   { src: "https://media.tenor.com/iS8_wMys4GwAAAPo/metal-pipe-gggg.mp4", audios: ["jixaw-metal-pipe-falling-sound.mp3"] },
   { src: "https://media.tenor.com/XHamsaug7KoAAAPo/das-war-ein-befehl-das-war-ein-befehl-cat.mp4", audios: ["das-war-ein-befehl_6M3MPtl.mp3"] },
   { src: "https://media.tenor.com/Qc7sPmCia6kAAAPo/cat-stare.mp4", audios: ["bombastic-side-eye.mp3"] },
-  { src: "https://media.tenor.com/-ufrqpl5cp0AAAPo/test.mp4", audios: ["bailando-bailando.mp3"] },
   { src: "https://media.tenor.com/FetQ_KhWgd4AAAPo/chill-guy.mp4", audios: ["chill-guy-song.mp3"] },
   { src: "https://media.tenor.com/kbQv5cIBq8IAAAPo/the-office-steve-carell.mp4", audios: ["nooo-god-0.mp3"] },
   { src: "https://media.tenor.com/MYZgsN2TDJAAAAPo/this-is.mp4", audios: ["fine.mp3"] },
@@ -72,9 +72,13 @@ const MEMES = [
 
   // --- GIF/JPG/PNG ---
   { src: "https://i.pinimg.com/736x/9c/67/38/9c6738bf74f94adf5ed0f9e4170cbf2d.jpg", audios: ["let-me-know.mp3"] },
+  { src: "https://media1.tenor.com/m/sV-p10fX0foAAAAC/gif-emoji-dying.gif", audios: ["auughhh.mp3"] },
+  { src: "https://media1.tenor.com/m/hyZ3wm5naugAAAAC/bongo-cat-button.gif", audios: ["dry-fart_3.mp3", "wrong-answer-sound-effect.mp3", "coche-claxon.mp3"] },
+  { src: "https://media.tenor.com/_AZJmhAry0gAAAAi/rat-dancing-meme.gif", audios: ["rat-dance-music.mp3"] },
+  { src: "https://media.tenor.com/kQA86PqyXZQAAAAi/small-dancing-white-cat-dance-funny.gif", audios: ["bailando-bailando.mp3","dancing-ai-cat.mp3"] },
   { src: "https://static.wikitide.net/italianbrainrotwiki/2/2f/Nooo_La_Polizia.png", audios: ["noo-la-policia.mp3"] },
   { src: "https://media.tenor.com/BegUzq59qvQAAAAi/mini-impact-miniimpact.gif", audios: ["fairy-tail-wow-fairy-tail-wow.mp3"] },
-  { src: "https://i.pinimg.com/originals/d5/1e/c9/d51ec9e1eb94636383c31cdfd549ec51.gif", audios: [] }, // nessun audio indicato
+  { src: "https://i.pinimg.com/originals/d5/1e/c9/d51ec9e1eb94636383c31cdfd549ec51.gif", audios: [] },
   { src: "https://media.tenor.com/gOTzyTGvt0wAAAAj/cat-wobble.gif", audios: ["wobbly-wiggly.mp3"] },
   { src: "https://media.tenor.com/dqaZmNuWIxwAAAAi/pogfish-oooo.gif", audios: ["gogogogogo.mp3"] },
   { src: "https://media.tenor.com/WZDGtj0jBDgAAAAi/mock-spongebob.gif", audios: ["spongebob-fail.mp3"] },
@@ -88,78 +92,135 @@ const MEMES = [
   { src: "https://media.tenor.com/b49RbivGBtMAAAPo/meh-goat.mp4", audios: ["meeeeee-mayimbu.mp3"] },
   { src: "https://i.pinimg.com/736x/6e/28/04/6e28044e354b92213dade3122048e93d.jpg", audios: ["diiiiiiiii.mp3"] },
   { src: "https://i.pinimg.com/originals/26/b9/66/26b9660514c1ff01beea3869562e6198.gif", audios: ["how-bout-i-sit-here-until-you-fall-asleep-mmmmmmmm-mp3cut.mp3"] },
+
+  // --- NUOVE AGGIUNTE ---
+  { src: "https://media.tenor.com/0man6VITMPYAAAPo/tim-allen.mp4", audios: ["tim-allen-confused.mp3"] },
+  { src: "https://media.tenor.com/Hg0fnO6PvzAAAAPo/sadds-man.mp4", audios: ["emotional-damage-meme.mp3"] },
+  { src: "https://media.tenor.com/2OjU0mSazDIAAAPo/cardi-b-laughing.mp4", audios: ["cardi-b-laugh_aAqBCTa.mp3"] },
+  { src: "https://media.tenor.com/YpVqLrEIa7IAAAAi/huh-cat.gif", audios: ["ceeday-huh-sound-effect.mp3"] },
+  { src: "https://media.tenor.com/8VuZc8I8f7EAAAAi/oiia-cat.gif", audios: ["oiia-oiia-sound.mp3"] },
+  { src: "https://media.tenor.com/39c7_ZNzC4MAAAAi/silly-cat-silly.gif", audios: ["happy-happy-happy-song.mp3"] },
+  { src: "https://media.tenor.com/S1VKHkJKqJwAAAPo/eyebrow-raise.mp4", audios: ["uhhh-okay-snow.mp3"] },
+  { src: "https://media.tenor.com/XqUxcBVuoasAAAAi/chill-chil.gif", audios: ["chill-guy.mp3"] },
+  { src: "https://media.tenor.com/QXVs4QWLlzkAAAPo/spider-man.mp4", audios: ["spiderman-meme-song.mp3"] },
+  { src: "https://media.tenor.com/D8JpDSNywwMAAAPo/oaky-okay-ok-meme-typo-oakley.mp4", audios: ["okmeme_sound_effect-2nmi5x9imac.mp3"] },
+  { src: "https://media.tenor.com/4mKwMGyI7HIAAAPo/noice-meme-nice.mp4", audios: ["noice_1.mp3"] },
+  { src: "https://media.tenor.com/fu5pw2B-3HsAAAPo/e-boy.mp4", audios: ["ainsley_harriott_and_his_spicy_meatconverttoaudio.mp3"] },
+  { src: "https://media.tenor.com/YG9-_yuIH3oAAAPo/why-are-you-running-runaway.mp4", audios: ["why-are-you-running-sound-effect-hd_2yraBjq.mp3"] },
+  { src: "https://media.tenor.com/U9VeSnXsUkAAAAPo/crying-man-sad.mp4", audios: ["best-cry-ever-trimmed.mp3"] },
+  { src: "https://media.tenor.com/vSx_SAt2dZ4AAAPo/bye.mp4", audios: ["crying-black-dude-meme.mp3"] },
 ];
 
+
+/* Stato */
 let audioEnabled = false;
 
+/* DOM refs */
 const $playground = document.getElementById("playground");
-const $doraLayer  = document.getElementById("dora-layer");
-const $dora       = document.getElementById("dora");
-const $startBtn   = document.getElementById("start-btn");
+const $doraLayer = document.getElementById("dora-layer");
+const $dora = document.getElementById("dora");
+const $snail = document.getElementById("snail");
+const $teethUp = document.getElementById("teeth-up");
+const $teethDown = document.getElementById("teeth-down");
 
-const MEME_WIDTH_PX = (() => {
-  const style = getComputedStyle(document.documentElement);
-  const val = style.getPropertyValue("--meme-width").trim();
-  return parseFloat(val.replace("px","")) || 220;
-})();
+/* Parametri snail (regolabili) */
+const SNAIL_TRAVEL_MS = 60000; // tempo per arrivare a 1/4 (1 min). Cambia a piacere.
 
-/* ===== Distribuzione casuale (gaussiana) ===== */
+/* --- Utils --- */
 function randGaussian() {
   let u = 0, v = 0;
   while (u === 0) u = Math.random();
   while (v === 0) v = Math.random();
   return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
 }
-function clamp(x, min, max){ return Math.min(max, Math.max(min, x)); }
-function randomPosWithin(containerW, containerH, elW, elH){
+function clamp(x, min, max) { return Math.min(max, Math.max(min, x)); }
+
+const MEME_WIDTH_PX = (() => {
+  const style = getComputedStyle(document.documentElement);
+  const val = style.getPropertyValue("--meme-width").trim();
+  return parseFloat(val.replace("px", "")) || 220;
+})();
+
+/* Dimensioni VISIVE del contenuto (img/video) dentro al wrapper .meme */
+function getChildRect(wrapper) {
+  const child = wrapper.firstElementChild;
+  if (!child) return { width: wrapper.offsetWidth, height: wrapper.offsetHeight };
+
+  const r = child.getBoundingClientRect?.();
+  if (r && r.width && r.height) return { width: r.width, height: r.height };
+
+  if (child.tagName === "VIDEO" && child.videoWidth && child.videoHeight) {
+    const approxW = MEME_WIDTH_PX * 0.5; // perché .meme > * è al 50%
+    return { width: approxW, height: approxW * (child.videoHeight / child.videoWidth) };
+  }
+  return { width: MEME_WIDTH_PX * 0.5, height: MEME_WIDTH_PX * 0.375 };
+}
+
+function randomPosWithin(containerW, containerH, elW, elH) {
   const cx = containerW / 2, cy = containerH / 2;
   const sigmaX = containerW / 4.2, sigmaY = containerH / 4.2;
-  let x = cx + randGaussian() * sigmaX - elW/2;
-  let y = cy + randGaussian() * sigmaY - elH/2;
+  let x = cx + randGaussian() * sigmaX - elW / 2;
+  let y = cy + randGaussian() * sigmaY - elH / 2;
   x = clamp(x, 0, Math.max(0, containerW - elW));
   y = clamp(y, 0, Math.max(0, containerH - elH));
   return { x, y };
 }
-function pickRandom(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
+function pickRandom(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
 
-/* ===== Drag & drop ===== */
-function makeDraggable(el){
-  let startX=0, startY=0, origX=0, origY=0, dragging=false;
-  const onDown = (e) => {
-    e.preventDefault();
-    dragging = true;
-    el.style.cursor = "grabbing";
-    const p = getPointer(e);
-    startX = p.x; startY = p.y; origX = el.offsetLeft; origY = el.offsetTop;
-    el.setPointerCapture?.(e.pointerId || 0);
-  };
-  const onMove = (e) => {
-    if(!dragging) return;
-    const p = getPointer(e);
-    const dx = p.x - startX, dy = p.y - startY;
-    el.style.left = `${clamp(origX + dx, 0, window.innerWidth - el.offsetWidth)}px`;
-    el.style.top  = `${clamp(origY + dy, 0, window.innerHeight - el.offsetHeight)}px`;
-  };
-  const onUp = (e) => {
-    dragging = false;
-    el.style.cursor = "grab";
-    try { el.releasePointerCapture?.(e.pointerId || 0); } catch(_) {}
-  };
-  el.addEventListener("pointerdown", onDown);
-  window.addEventListener("pointermove", onMove);
-  window.addEventListener("pointerup", onUp);
-}
-function getPointer(e){
+function getPointer(e) {
   if (e.touches && e.touches[0]) return { x: e.touches[0].clientX, y: e.touches[0].clientY };
   return { x: e.clientX, y: e.clientY };
 }
 
-/* ===== Audio on hover (attivo dopo Start) ===== */
-function bindHoverAudio(wrapper, audioList){
+/* --- Drag & drop (limiti corretti sulla dimensione visiva) --- */
+function makeDraggable(wrapper) {
+  let startX = 0, startY = 0, origX = 0, origY = 0, dragging = false;
+
+  const onDown = (e) => {
+    e.preventDefault();
+    dragging = true;
+    wrapper.style.cursor = "grabbing";
+    const p = getPointer(e);
+    startX = p.x; startY = p.y;
+    origX = wrapper.offsetLeft; origY = wrapper.offsetTop;
+    wrapper.setPointerCapture?.(e.pointerId || 0);
+  };
+
+  const onMove = (e) => {
+    if (!dragging) return;
+    const p = getPointer(e);
+    const dx = p.x - startX;
+    const dy = p.y - startY;
+
+    const { width: visW, height: visH } = getChildRect(wrapper);
+    const maxX = window.innerWidth - visW;
+    const maxY = window.innerHeight - visH;
+
+    const newX = clamp(origX + dx, 0, Math.max(0, maxX));
+    const newY = clamp(origY + dy, 0, Math.max(0, maxY));
+    wrapper.style.left = `${newX}px`;
+    wrapper.style.top = `${newY}px`;
+  };
+
+  const onUp = (e) => {
+    dragging = false;
+    wrapper.style.cursor = "grab";
+    try { wrapper.releasePointerCapture?.(e.pointerId || 0); } catch (_) { }
+  };
+
+  wrapper.addEventListener("pointerdown", onDown);
+  window.addEventListener("pointermove", onMove);
+  window.addEventListener("pointerup", onUp);
+}
+
+/* --- Audio hover (attivo solo dopo click) --- */
+function bindHoverAudio(wrapper, audioList) {
   if (!audioList || audioList.length === 0) return;
+
   const audioEl = new Audio();
   audioEl.preload = "none";
   audioEl.loop = true;
+
   let lastPick = null;
 
   const tryPlay = () => {
@@ -171,16 +232,23 @@ function bindHoverAudio(wrapper, audioList){
     }
     lastPick = pick;
     audioEl.src = audioBasePath + pick;
-    audioEl.play().catch(() => {});
+    audioEl.play().catch(() => { });
   };
+
   const stop = () => { audioEl.pause(); audioEl.currentTime = 0; };
 
-  wrapper.addEventListener("mouseenter", () => { wrapper.classList.add("hovering"); tryPlay(); });
-  wrapper.addEventListener("mouseleave", () => { wrapper.classList.remove("hovering"); stop(); });
+  wrapper.addEventListener("mouseenter", () => {
+    wrapper.classList.add("hovering");
+    tryPlay();
+  });
+  wrapper.addEventListener("mouseleave", () => {
+    wrapper.classList.remove("hovering");
+    stop();
+  });
 }
 
-/* ===== Crea meme ===== */
-function createMemeElement(item){
+/* --- Crea un meme --- */
+function createMemeElement(item) {
   const w = document.createElement("div");
   w.className = "meme";
 
@@ -204,42 +272,125 @@ function createMemeElement(item){
   w.appendChild(el);
   $playground.appendChild(w);
 
-  const approxW = MEME_WIDTH_PX;
-  const approxH = el.videoHeight ? (approxW * el.videoHeight / el.videoWidth) : approxW * 0.75;
+  // Posizionamento casuale usando dimensioni visive
   const place = () => {
-    const { x, y } = randomPosWithin(window.innerWidth, window.innerHeight, w.offsetWidth || approxW, w.offsetHeight || approxH);
-    w.style.left = `${x}px`; w.style.top  = `${y}px`;
+    const { width: visW, height: visH } = getChildRect(w);
+    const { x, y } = randomPosWithin(
+      window.innerWidth, window.innerHeight,
+      visW || MEME_WIDTH_PX * 0.5,
+      visH || MEME_WIDTH_PX * 0.375
+    );
+    w.style.left = `${x}px`;
+    w.style.top = `${y}px`;
   };
-  if (el.tagName === "IMG") el.addEventListener("load", place);
-  else if (el.tagName === "VIDEO") { (el.readyState >= 1) ? place() : el.addEventListener("loadedmetadata", place, { once: true }); }
+
+  if (el.tagName === "IMG") {
+    el.addEventListener("load", place);
+  } else if (el.tagName === "VIDEO") {
+    if (el.readyState >= 1) place();
+    else el.addEventListener("loadedmetadata", place, { once: true });
+  }
+  // Fallback immediato
   place();
 
   makeDraggable(w);
   bindHoverAudio(w, item.audios);
+
   return w;
 }
 
-/* ===== Init (dopo Start) ===== */
-function init(){
+/* --- Init dopo lo start --- */
+function init() {
   MEMES.forEach(createMemeElement);
+
+  // Mantieni i meme in viewport al resize, ricalcolando col visivo
   window.addEventListener("resize", () => {
     document.querySelectorAll(".meme").forEach(w => {
-      const x = clamp(w.offsetLeft, 0, window.innerWidth - w.offsetWidth);
-      const y = clamp(w.offsetTop, 0, window.innerHeight - w.offsetHeight);
-      w.style.left = `${x}px`; w.style.top  = `${y}px`;
+      const { width: visW, height: visH } = getChildRect(w);
+      const x = clamp(w.offsetLeft, 0, Math.max(0, window.innerWidth - visW));
+      const y = clamp(w.offsetTop, 0, Math.max(0, window.innerHeight - visH));
+      w.style.left = `${x}px`;
+      w.style.top = `${y}px`;
     });
   });
 }
 
-/* ===== Flusso ===== */
+/* --- Snail: da dx -> 1/4 pagina (centro elemento), poi freeze ultimo frame --- */
+function animateSnailToQuarter() {
+  // Partenza: completamente fuori a destra
+  const startLeft = window.innerWidth + 20;
+  $snail.style.left = `${startLeft}px`;
+
+  function computeTargetLeft() {
+    const w = $snail.getBoundingClientRect().width || 120;  // coerente col CSS
+    const quarter = window.innerWidth * 0.25;
+    return Math.round(quarter - w / 2); // fermati con il CENTRO allo 0.25
+  }
+
+  let targetLeft = computeTargetLeft();
+  let dist = startLeft - targetLeft;
+  const startTime = performance.now();
+
+  function freezeSnailVideo() {
+    if ($snail.tagName !== "VIDEO") return; // se fosse <img>, niente freeze
+    if ($snail.readyState < 1) {
+      $snail.addEventListener("loadedmetadata", freezeSnailVideo, { once: true });
+      return;
+    }
+    $snail.pause();
+    try {
+      $snail.currentTime = Math.max(0, $snail.duration - 0.05);
+    } catch (_) { }
+  }
+
+  function step(now) {
+    // Se cambia la larghezza finestra durante l’animazione, ricalcola il target
+    targetLeft = computeTargetLeft();
+    dist = startLeft - targetLeft;
+
+    const t = clamp((now - startTime) / SNAIL_TRAVEL_MS, 0, 1);
+    const left = Math.round(startLeft - dist * t);
+    $snail.style.left = `${left}px`;
+
+    if (left <= targetLeft || t >= 1) {
+      freezeSnailVideo();
+      return;
+    }
+    requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+}
+
+/* --- Teeth: redirect a fine animazioni (solo dopo click) --- */
+function setupTeethRedirectAfterClick() {
+  let upDone = false, downDone = false;
+  const tryRedirect = () => {
+    if (upDone && downDone) window.location.href = "dh-pill/dh-index.html";
+  };
+  $teethUp.addEventListener("animationend", () => { upDone = true; tryRedirect(); }, { once: true });
+  $teethDown.addEventListener("animationend", () => { downDone = true; tryRedirect(); }, { once: true });
+}
+
+/* --- Flusso --- */
 document.addEventListener("DOMContentLoaded", () => {
-  $startBtn.addEventListener("click", () => {
-    audioEnabled = true;
-    $startBtn.classList.add("hidden");
+  // Snail “intro” movement
+  animateSnailToQuarter();
+
+  // Click sullo snail = start
+  $snail.addEventListener("click", () => {
+    audioEnabled = true;                         // sblocca audio hover
+    document.body.classList.add("teeth-on");     // avvia teeth (CSS anima ora)
+    setupTeethRedirectAfterClick();              // ascolta fine animazioni
+
+    // mostra DORA + meme
     $doraLayer.classList.remove("hidden");
     $doraLayer.setAttribute("aria-hidden", "false");
-    try { $dora.play().catch(()=>{}); } catch(e){}
+    try { if ($dora) $dora.play().catch(() => { }); } catch (e) { }
     $playground.classList.remove("hidden");
+
     init();
+
+    // dopo l'avvio, la chiocciola non deve più intercettare click
+    $snail.style.pointerEvents = "none";
   });
 });

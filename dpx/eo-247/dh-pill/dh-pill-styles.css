@@ -1,19 +1,19 @@
-/* ============ Schermo fisso, sfondo e reset (come nella tua pillola) ============ */
+/* ================== Base ================== */
 html, body{
   height: 100%;
   margin: 0;
-  background: #111;        /* stesso colore del “finale” */
-  overflow: hidden;        /* NIENTE SCROLL */
+  background: #111;
+  overflow: hidden;
   font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
 }
 
-/* Contenitore full-viewport */
+/* ================== Layout pill ================== */
 .pill-section{
-  position: fixed;         /* occupa tutto lo schermo e non scrolla */
+  position: fixed;
   inset: 0;
+  --pill-left: 50%; /* pillola centrata orizzontalmente */
 }
 
-/* Noise sotto a tutto */
 .pill-section .noise-canvas{
   position: fixed;
   inset: 0;
@@ -21,94 +21,131 @@ html, body{
   pointer-events: none;
 }
 
-/* Pillola centrata */
+/* Pillola al centro, nascosta di default */
 .pill-section .pill-img{
   position: absolute;
-  top: 50%; left: 50%;
+  top: 50%;
+  left: var(--pill-left);
   transform: translate(-50%, -50%);
-  width: clamp(54px, 10vmin, 118px);  
+  width: clamp(54px, 10vmin, 118px);
   height: auto;
   cursor: pointer;
   z-index: 8;
-  transition: transform .2s ease;
+  transition: transform .2s ease, opacity .6s ease; /* leggermente più lenta */
+  opacity: 1;
 }
+.pill-section .pill-img.is-hidden{
+  opacity: 0;
+  pointer-events: none;
+}
+
 .pill-section .pill-img:hover{
   transform: translate(-50%, calc(-50% - 6px));
 }
 
-/* ==== LANG SWITCH identico al tuo ==== */
+
+/* ================== Switch lingua ================== */
 #lang-switch {
   position: fixed;
   top: 12px;
   right: 12px;
   z-index: 10;
-
-  display: none;           /* hidden finché non c'è .show */
-  opacity: 0;              /* fade-in morbido */
+  display: none;
+  opacity: 0;
   gap: 6px;
   padding: 6px;
   border-radius: 10px;
-
-  /* leggibile su scuro ma discreto */
   color: #ffffff;
   background: rgba(255, 255, 255, 0.08);
   border: 1px solid rgba(255, 255, 255, 0.22);
   backdrop-filter: blur(4px);
-
   transition: opacity .25s ease;
 }
-#lang-switch.show {
-  display: flex;
-  opacity: .65;            /* poco visibile */
-}
-#lang-switch:hover {
-  opacity: .85;            /* leggermente più visibile su hover */
-}
+#lang-switch.show { display: flex; opacity: .65; }
+#lang-switch:hover { opacity: .85; }
 #lang-switch .lang {
-  min-width: 38px;
-  height: 28px;
-  padding: 0 8px;
-
+  min-width: 38px; height: 28px; padding: 0 8px;
   background: rgba(255, 255, 255, 0.06);
   border: 1px solid rgba(255, 255, 255, 0.28);
-  border-radius: 6px;
-  color: #fff;
-
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: .08em;
-  text-transform: uppercase;
-
-  cursor: pointer;
-  filter: none;
-  opacity: 1;
+  border-radius: 6px; color: #fff;
+  font-size: 12px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
+  cursor: pointer; filter: none; opacity: 1;
   transition: background .15s ease, border-color .15s ease, transform .15s ease;
 }
-#lang-switch .lang:hover {
-  transform: translateY(-1px);
-  background: rgba(255, 255, 255, 0.12);
-  border-color: rgba(255, 255, 255, 0.4);
-}
-#lang-switch .lang.active {
-  background: rgba(255, 255, 255, 0.20);
-  border-color: rgba(255, 255, 255, 0.55);
-}
+#lang-switch .lang:hover { transform: translateY(-1px); background: rgba(255,255,255,.12); border-color: rgba(255,255,255,.4); }
+#lang-switch .lang.active { background: rgba(255,255,255,.20); border-color: rgba(255,255,255,.55); }
 
-
-/* Immagini hover */
+/* ================== Hover overlays ================== */
 .pill-section .hover-name,
 .pill-section .hover-info{
-  position: fixed;                /* segue il viewport */
+  position: fixed;
   top: 0; left: 0;
-  display: none;
-  opacity: 0;
-  transition: opacity .35s ease;  /* dissolvenza “lenta” */
+  display: none; opacity: 0;
+  transition: opacity 2s ease;
   pointer-events: none;
   z-index: 9;
   filter: drop-shadow(0 10px 30px rgba(0,0,0,.45));
   user-select: none;
   will-change: opacity, transform;
 }
-
 .pill-section .hover-name{ width: clamp(150px, 26vmin, 320px); }
-.pill-section .hover-info{ width: clamp(300px, 34vmin, 640px); } 
+.pill-section .hover-info{ width: clamp(300px, 34vmin, 640px); }
+
+/* ================== Banner centrale (testo + bottoni) ================== */
+.side-banner{
+  position: fixed;
+  inset: 0;
+  z-index: 8;
+  display: grid;
+  place-items: center; /* centra tutto al centro pagina */
+}
+
+.banner-stack{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(12px, 2vmin, 18px);
+  padding: 18px 14px;
+  opacity: 1;
+  transition: opacity 2s ease;
+}
+.banner-stack.fade-out{
+  opacity: 0;           /* dissolvenza di testo+bottoni */
+  pointer-events: none;
+}
+.banner-stack.is-hidden{
+  display: none;        /* sparisce dal layout dopo la dissolvenza */
+}
+
+/* Testo centrato sopra i bottoni */
+.banner-text{
+  margin: 0;
+  color: #d4d4d4;
+  text-align: center;
+  font-size: clamp(16px, 2.4vmin, 22px);
+  line-height: 1.35;
+}
+
+/* Riga bottoni affiancati */
+.btn-row{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(12px, 2.2vmin, 22px);
+}
+
+/* Bottoni (stessa estetica) */
+.back-btn,
+.next-btn{
+  width: clamp(150px, 18vmin, 230px);
+  height: auto;
+  cursor: pointer;
+  user-select: none;
+  filter: drop-shadow(0 6px 24px rgba(0,0,0,.35));
+  opacity: 1;
+  transition: transform .2s ease, opacity .4s ease;
+}
+.back-btn:hover,
+.next-btn:hover{
+  transform: translateY(-6px);
+}
